@@ -323,7 +323,7 @@ namespace Aliyun.OSS.Common.Communication
             // with the WebHeaderCollection.Add method,
             // we have to call an internal method to skip validation.
             foreach (var h in serviceRequest.Headers)
-                HttpExtensions.AddInternal(webRequest.Headers, h.Key, h.Value);
+                HttpExtensionsForUnity.AddInternal(webRequest.Headers, h.Key, h.Value);
 
             // Set user-agent
             if (!string.IsNullOrEmpty(configuration.UserAgent))
@@ -394,6 +394,29 @@ namespace Aliyun.OSS.Common.Communication
                     null);
                 _addInternalMethod = mi;
             }
+
+            _addInternalMethod.Invoke(headers, new object[] { key, value });
+        }
+    }
+
+    internal static class HttpExtensionsForUnity
+    {
+        internal static void AddInternal(WebHeaderCollection headers, string key, string value)
+        {
+            // HTTP headers should be encoded to iso-8859-1.
+            // Encode headers for Unity platforms.
+            value = HttpUtils.Reencode(value, HttpUtils.Utf8Charset, HttpUtils.Iso88591Charset);
+
+            // Specify the internal method name for adding headers
+            // Unity: AddWithoutValidate
+            var internalMethodName = "AddWithoutValidate";
+
+            MethodInfo _addInternalMethod = typeof(WebHeaderCollection).GetMethod(
+                internalMethodName,
+                BindingFlags.NonPublic | BindingFlags.Instance,
+                null,
+                new Type[] { typeof(string), typeof(string) },
+                null);
 
             _addInternalMethod.Invoke(headers, new object[] { key, value });
         }
