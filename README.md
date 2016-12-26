@@ -7,6 +7,11 @@
  - 此Unity SDK基于[阿里云OSS C# SDK](https://github.com/aliyun/aliyun-oss-csharp-sdk)简单修改而来，changes看checkin历史记录。
  - 只是简单测试了Editor和Android端的几个简单API，比如获取bucket信息，未全部测试Unity各平台及其它方法，请谨慎使用。
  - 弄这个版本只是懒得在Unity里用REST API，这里只是简单解决了c# sdk在Unity上使用出现空指针的问题，期望阿里云OSS官方支持Unity平台。
+ - 有问题欢迎提issue，现在发现Unity版本还是有不少坑，遇到一些问题陆续在修复，没办法，一条道走到黑了。
+ 
+## 注意事项
+ - 如果要运行sample，需要将aliyun-oss-sdk-sample项目设为`启动项目`，并添加您自己的AccessKeyId，AccessKeySecret，bucket，key等后即可运行。
+ - 不要用BeginPutObject(string bucketName, string key, string fileToUpload, ...)这个接口，该接口内部由于异步处理会报stream already closed的错误，并且没有做异常处理，导致外部无限等待。Wrokaround是先自己读取stream，然后再用BeginPutObject(string bucketName, string key, Stream content，...)
  
 ## 关于
  - 此Unity SDK基于[阿里云对象存储服务](http://www.aliyun.com/product/oss/) API构建。
@@ -50,7 +55,6 @@
 	client.DeleteBucket(bucketName);
 ```
 
-#### 上传文件（Put Object）
 ```csharp
 	OssClient client = new OssClient(endpoint, accessKeyId, accessKeySecret); 
 	client.PutObject(bucketName, key, filePathToUpload);
@@ -81,6 +85,5 @@
 #### 其他
     上面的例子中，如果没有抛出异常则说明执行成功，否则失败，更详细的例子可以在aliyun-oss-sample项目中查看并运行。
 	
-## 注意事项
- - 如果要运行sample，需要将aliyun-oss-sdk-sample项目设为`启动项目`，并添加您自己的AccessKeyId，AccessKeySecret，bucket，key等后即可运行。
+
 
