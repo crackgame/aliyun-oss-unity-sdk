@@ -4,9 +4,10 @@
  * 
  * 版权所有 （C）阿里云计算有限公司
  */
- 
+
 using System;
 using System.IO;
+using System.Text;
 using System.Xml.Serialization;
 
 namespace Aliyun.OSS.Transform
@@ -26,7 +27,8 @@ namespace Aliyun.OSS.Transform
                 stream = new MemoryStream();
                 var namespaces = new XmlSerializerNamespaces();
                 namespaces.Add(string.Empty, string.Empty);
-                Serializer.Serialize(stream, requestObject, namespaces);
+                StreamWriter textWriter = new StreamWriter(stream, Encoding.GetEncoding("utf-8"));
+                Serializer.Serialize(textWriter, requestObject, namespaces);
                 stream.Seek(0, SeekOrigin.Begin);
                 return stream;
             }
