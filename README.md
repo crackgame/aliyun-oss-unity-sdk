@@ -13,6 +13,7 @@
  - 如果要运行sample，需要将aliyun-oss-sdk-sample项目设为`启动项目`，并添加您自己的AccessKeyId，AccessKeySecret，bucket，key等后即可运行。
  - 不要用BeginPutObject(string bucketName, string key, string fileToUpload, ...)这个接口，该接口内部由于异步处理会报stream already closed的错误，并且没有做异常处理，导致外部无限等待。Wrokaround是先自己读取stream，然后再用BeginPutObject(string bucketName, string key, Stream content，...)
  - 发现IOS平台无法使用ListObjects和BeginListObjects，程序不会报错，但是取不到正确结果。解决办法是不使用dll，直接将工程目录下的整个sdk文件夹复制到Unity工程里。
+ - 其他问题请参考：http://www.shirlman.com/unity/20161222/510
  
 ## 关于
  - 此Unity SDK基于[阿里云对象存储服务](http://www.aliyun.com/product/oss/) API构建。
@@ -31,7 +32,7 @@
 ## 安装方法
  - build工程，将..sdk\bin\Debug\Aliyun.OSS.dll引入Unity工程。
  - 或者直接用build好的[版本](https://github.com/Shirlman/aliyun-oss-unity-sdk/blob/master/build/Aliyun.OSS.dll)。
- - 或者直接将sdk文件夹复制到Unity工程里。
+ - 或者直接将sdk文件夹复制到Unity工程里（如果你遇到一些奇葩的问题，请使用该方法）。
  
 ## 快速使用
 #### 获取存储空间列表（List Bucket）
