@@ -198,7 +198,7 @@ namespace Aliyun.OSS.Util
         /// <returns>流的md5值</returns>
         public static string ComputeContentMd5(Stream input, long partSize)
         {
-            using (var md5 = MD5.Create())
+            using (var md5 = System.Security.Cryptography.MD5.Create())
             {
                 int readSize = (int)partSize;
                 long pos = input.Position;
